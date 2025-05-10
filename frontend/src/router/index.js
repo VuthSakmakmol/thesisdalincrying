@@ -1,53 +1,53 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// Layouts
+// Layouts (each renders its own content directly)
 import CustomerLayout from '@/layouts/CustomerLayout.vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 import DeliveryLayout from '@/layouts/DeliveryLayout.vue'
 import SuperadminLayout from '@/layouts/SuperadminLayout.vue'
 
-// Views (Pages)
+// Guest views
 import Guest from '@/views/Guest.vue'
 import Login from '@/views/Login.vue'
 import Register from '@/views/Register.vue'
 
-import CustomerDashboard from '@/views/shop/CustomerDashboard.vue'
-import AdminDashboard from '@/views/admin/AdminDashboard.vue'
-import DeliveryDashboard from '@/views/delivery/DeliveryDashboard.vue'
-import SuperadminDashboard from '@/views/superadmin/SuperadminDashboard.vue'
-
-// Main routes
 const routes = [
+  // Public routes
   {
     path: '/',
-    component: CustomerLayout,
-    children: [
-      { path: '', component: Guest },
-      { path: 'login', component: Login },
-      { path: 'register', component: Register },
-      { path: 'customer/dashboard', component: CustomerDashboard }
-    ]
+    component: Guest
+  },
+  {
+    path: '/login',
+    component: Login
+  },
+  {
+    path: '/register',
+    component: Register
+  },
+
+  // Role-based layouts
+  {
+    path: '/customer',
+    component: CustomerLayout
   },
   {
     path: '/admin',
-    component: AdminLayout,
-    children: [
-      { path: 'dashboard', component: AdminDashboard }
-    ]
+    component: AdminLayout
   },
   {
     path: '/delivery',
-    component: DeliveryLayout,
-    children: [
-      { path: 'dashboard', component: DeliveryDashboard }
-    ]
+    component: DeliveryLayout
   },
   {
     path: '/superadmin',
-    component: SuperadminLayout,
-    children: [
-      { path: 'dashboard', component: SuperadminDashboard }
-    ]
+    component: SuperadminLayout
+  },
+
+  // Catch-all (404)
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/'
   }
 ]
 
@@ -56,30 +56,26 @@ const router = createRouter({
   routes
 })
 
+// 🔐 Navigation Guard
 import { useUserStore } from '@/stores/userStore'
 
 router.beforeEach((to, from, next) => {
   const store = useUserStore()
   const role = store.user?.role
+  const isLoggedIn = !!store.user
 
-  // Redirect logged-in users from login/register to their dashboard
-  if ((to.path === '/login' || to.path === '/register') && store.token) {
-    return next(`/${role}/dashboard`)
+  // Redirect logged-in users from login/register
+  if ((to.path === '/login' || to.path === '/register') && isLoggedIn) {
+    return next(`/${role}`)
   }
 
-  // Protect role-specific routes
-  const protectedRoutes = [
-    '/customer/dashboard',
-    '/admin/dashboard',
-    '/delivery/dashboard',
-    '/superadmin/dashboard'
-  ]
-  if (protectedRoutes.includes(to.path) && !store.token) {
+  // Protect role-based pages
+  const protectedPaths = ['/customer', '/admin', '/delivery', '/superadmin']
+  if (protectedPaths.includes(to.path) && !isLoggedIn) {
     return next('/login')
   }
 
   next()
 })
-
 
 export default router

@@ -1,19 +1,15 @@
 <template>
   <v-app>
-    <!-- Top bar -->
     <AppBar />
-
-    <!-- Sidebar -->
-    <SideBar />
-
-    <!-- Main content -->
-    <v-main class="pa-4">
-      <router-view />
+    <CustomerSideBar />
+    <v-main class="pa-6">
+      <CustomerDashboard />
     </v-main>
   </v-app>
 </template>
 
 <script setup>
 import AppBar from '@/components/AppBar.vue'
-import SideBar from '@/components/SideBar.vue'
+import CustomerSideBar from '@/components/CustomerSideBar.vue'
+import CustomerDashboard from '@/views/shop/CustomerDashboard.vue'
 </script>

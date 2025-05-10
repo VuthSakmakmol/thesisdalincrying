@@ -1,19 +1,23 @@
 <template>
   <v-app>
-    <!-- Top Bar -->
-    <AppBar />
+    <AppBar @toggle-drawer="drawer = !drawer" />
 
-    <!-- Sidebar (role-aware) -->
-    <SideBar />
+    <SuperadminSideBar v-model="drawer" />
 
-    <!-- Main Content -->
-    <v-main class="pa-4">
-      <router-view />
+    <!-- v-main MUST come after both app-bar and sidebar -->
+    <v-main>
+      <v-container fluid class="pa-6">
+        <SuperadminDashboard />
+      </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import AppBar from '@/components/AppBar.vue'
-import SideBar from '@/components/SideBar.vue'
+import SuperadminSideBar from '@/components/SuperadminSideBar.vue'
+import SuperadminDashboard from '@/views/superadmin/SuperadminDashboard.vue'
+
+const drawer = ref(true)
 </script>

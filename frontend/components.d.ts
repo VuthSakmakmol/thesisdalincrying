@@ -8,12 +8,16 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AdminSideBar: typeof import('./src/components/AdminSideBar.vue')['default']
     AppBar: typeof import('./src/components/AppBar.vue')['default']
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
+    CustomerSideBar: typeof import('./src/components/CustomerSideBar.vue')['default']
+    DeliverySideBar: typeof import('./src/components/DeliverySideBar.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     NavBar: typeof import('./src/components/NavBar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SideBar: typeof import('./src/components/SideBar.vue')['default']
+    SuperadminSideBar: typeof import('./src/components/SuperadminSideBar.vue')['default']
   }
 }
